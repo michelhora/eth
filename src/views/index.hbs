@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <script
+  src="https://code.jquery.com/jquery-3.5.1.js"
+  integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc="
+  crossorigin="anonymous"></script>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha384-HSMxcRTRxnN+Bdg0JdbxYKrThecOKuH5zCYotlSAcp1+c8xmyTe9GYg1l9a69psu" crossorigin="anonymous">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Criar Carteira</title>
+</head>
+<body>
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item active" aria-current="page">Criar Carteira ETH</a></li>
+    <li class="breadcrumb-item active"> <a href="/getwallet">Buscar Carteira ETH</a></li>
+  </ol>
+</nav>
+
+  <div class="container justify-content-center">
+    <div class="align-middle">
+      <form id="customerForm">
+        <h1>Criar Carteira ETH</h1>
+        <label for="namee" style="margin-top: 32px;">Nome:</label>
+        <input type="text" class="form-control" id="name" placeholder="Digite seu nome">
+        <button class="btn btn-primary" style="margin-top: 32px;" type="submit" id="botaoEnviar">Criar carteira!</button> 
+      </form>
+      <div style="margin-top: 32px;" id="postResultDiv"></div>
+    </div>
+  </div>  
+</body>
+
+<script>
+$( document ).ready(function() {
+
+    $("#customerForm").submit(function(event) {
+      event.preventDefault();
+      ajaxPost();
+   });
+
+  function ajaxPost() {
+
+    var username = $("#name").val();
+
+      $.ajax({
+      type : "POST",
+      contentType : "application/json",
+      url : window.location + "users",
+      data : JSON.stringify({name: username}),
+      dataType : 'json',
+      success : function(response) {
+        console.log(response)
+        $("#postResultDiv").html("<p style='color: green'>" + 
+          "Carteira para o usuário <b>" + username + "</b> criada com sucesso! <br>" +
+          "Sua key é:"+ response.private_key +". Anote-a em um lugar seguro!"
+          ); 
+      },
+      error : function(customer) {
+        $("#postResultDiv").html("<p>" + 
+          "usuário já existe! <br>"); 
+      },
+    });
+
+  }
+
+});
+
+        
+</script>
+</html>

@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <script
+  src="https://code.jquery.com/jquery-3.5.1.js"
+  integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc="
+  crossorigin="anonymous"></script>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha384-HSMxcRTRxnN+Bdg0JdbxYKrThecOKuH5zCYotlSAcp1+c8xmyTe9GYg1l9a69psu" crossorigin="anonymous">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Buscar Carteira</title>
+</head>
+<body>
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item active"><a href="/">Criar Carteira</a></li>
+    <li class="breadcrumb-item active">Buscar Carteira</li>
+  </ol>
+</nav>
+
+  <div class="container justify-content-center">
+    <div class="align-middle">
+      <form id="customerForm">
+        <h1>Obter Carteira ETH</h1>
+        <label for="namee" style="margin-top: 32px;">Hash key:</label>
+        <input type="text" class="form-control" id="name" placeholder="Digite sua key">
+        <button class="btn btn-primary" style="margin-top: 32px;" type="submit" id="botaoEnviar">Obter Carteira!</button> 
+      </form>
+      <div id="postResultDiv" style="margin-top: 32px;"></div>
+      <img id="qrCode" />
+    </div>
+  </div>  
+</body>
+
+<script>
+$( document ).ready(function() {
+
+    $("#customerForm").submit(function(event) {
+      event.preventDefault();
+      ajaxPost();
+   });
+
+  function ajaxPost() {
+
+    var hash = $("#name").val();
+
+       $.ajax({
+      type : "POST",
+      contentType : "application/json",
+      url : "http://localhost:3333/getQR",
+      data : JSON.stringify({hash: hash}),
+      dataType : 'json',
+      success : function(response) { 
+
+        console.log(response)
+        $("#postResultDiv").html("<p style='color: green'>" + 
+          "<b>Mensagem do servidor: </b> <br>"+
+          "Usuário: <b>" + response.user.name + "</b>  <br>" +
+          "Sua key é:"+ response.user.private_key + "<br><br> &nbsp; &nbsp; &nbsp;                 Seu QR Code: "
+          ); 
+
+           $('#qrCode').attr('src','' + response.user.qr_code);
+      },
+      error : function(response,error) {
+        console.log(response)
+        $("#postResultDiv").html("<p>" + 
+          "usuário já existe! <br>"); 
+      },
+    });
+
+  }
+
+});
+
+        
+</script>
+</html>
